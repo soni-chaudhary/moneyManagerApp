@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:money_manage_app/Screens/HomePage.dart';
 import 'package:money_manage_app/Screens/SignIn.dart';
 
 class SignUp extends StatefulWidget {
@@ -9,9 +11,25 @@ class SignUp extends StatefulWidget {
 class SignUpState extends State<SignUp> {
   TextEditingController userName = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController passwored = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool _isObscure = true;
   bool? _checked = false;
+  Future signUp() async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: email.text.trim(),
+        password: password.text.trim(),
+      )
+          .then((value) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      });
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +179,7 @@ class SignUpState extends State<SignUp> {
                       Container(
                         margin: EdgeInsets.only(left: 15, top: 15),
                         child: Text(
-                          "Password*",
+                          "",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -184,8 +202,10 @@ class SignUpState extends State<SignUp> {
                           padding: const EdgeInsets.only(
                               left: 20, top: 6, bottom: 6),
                           child: TextField(
+                            autocorrect: false,
+                            enableSuggestions: false,
                             obscureText: _isObscure,
-                            controller: passwored,
+                            controller: password,
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -276,7 +296,7 @@ class SignUpState extends State<SignUp> {
                 height: 50,
                 child: MaterialButton(
                   color: Colors.orange,
-                  onPressed: () {},
+                  onPressed: signUp,
                   child: Text(
                     "SIGN IN",
                     style: TextStyle(

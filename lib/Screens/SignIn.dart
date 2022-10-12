@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:money_manage_app/Screens/HomePage.dart';
 import 'package:money_manage_app/Screens/SignUp.dart';
 
 class SignIn extends StatefulWidget {
@@ -16,8 +17,13 @@ class SignInState extends State<SignIn> {
 
   Future signIn() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text.trim(), password: password.text.trim());
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: email.text.trim(), password: password.text.trim())
+          .then((value) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      });
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
@@ -201,7 +207,10 @@ class SignInState extends State<SignIn> {
                     ),
                   ),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
+                    borderRadius: BorderRadius.circular(
+                      30,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
@@ -262,11 +271,14 @@ class SignInState extends State<SignIn> {
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                          ),
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(50)),
+                        border: Border.all(
+                          width: 1,
+                        ),
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(
+                          50,
+                        ),
+                      ),
                       child: Center(
                         child: Image.asset(
                           "images/twitter.png",
